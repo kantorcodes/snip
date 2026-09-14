@@ -54,6 +54,10 @@ func Run(r io.Reader, w io.Writer, commands []string, prefixes []TransparentPref
 		return nil
 	}
 
+	if holGuardEnabled() && !holGuardAllows(ti.Command) {
+		return writeHOLGuardDeny(w)
+	}
+
 	// Commands containing a command substitution ($(...) or backticks) or a
 	// carriage return cannot be safely segmented or attested: the substituted
 	// content executes without ever being inspected. Pass through unchanged so
